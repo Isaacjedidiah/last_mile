@@ -1,0 +1,29 @@
+            # if robust_table produced a raw BLOB (it couldn't structure the
+            # table -- e.g. merged cells put values in wrong columns), try Sonnet
+            # FORMATTING: send the WHOLE PAGE image + the blob, Sonnet re-aligns the
+            # blob's values into the correct columns it sees on the page (values
+            # from the blob, verified; structure from the image). Tagged
+            # sonnet_formatted. We send the whole page (not a crop) because cropping
+            # the table was what failed before.
+            _is_blob = (rule_claims and len(rule_claims) == 1
+                        and getattr(rule_claims[0], "model_used", "") == "table_blob")
+            if _is_blob and page_image_fn is not None and run_async_fn and llm_client:
+                try:
+                    from .sonnet_table_format import sonnet_format_table
+                    _page_b64 = page_image_fn(el.page) if el.page is not None else None
+                    if _page_b64:
+                        _fmt = sonnet_format_table(
+                            content, _page_b64, filename, page=el.page,
+                            title=_prefix(current_title, current_section),
+                            team=team, report_type=report_type,
+                            entity_ref=entity_ref, claim_cls=Claim,
+                            run_async_fn=run_async_fn, llm_client=llm_client,
+                            vision_model_key=vision_model_key,
+                            audit=audit, run_id=run_id)
+                        if _fmt:
+                            rule_claims = _fmt      # use the re-aligned version
+                except Exception:
+                    pass
+            if rule_claims:
+                claims.extend(rule_claims)
+            continue

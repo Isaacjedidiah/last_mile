@@ -1,0 +1,6 @@
+document,page,element_type,field_name,value,should_extract,notes
+Example_Report_2026,1,table,Revenue Q1,46,TRUE,positive: a value that SHOULD be extracted
+Example_Report_2026,1,table,Revenue Q2,52,TRUE,positive
+Example_Report_2026,2,figure,Exposure Jun-24,12,TRUE,chart value (matched within tolerance)
+Example_Report_2026,2,text,Total exposure,500,TRUE,text-embedded number
+Example_Report_2026,3,table,Axis label 2000,2000,FALSE,decoy: axis scale number that should NOT be extracted

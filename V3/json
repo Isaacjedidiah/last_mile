@@ -1,0 +1,37 @@
+    def _to_jsonable(src):
+        """Normalise content that may be a VariantVal / Row / bytes into a str or
+        dict. ai_parse returns figure content as a VARIANT on some runtimes; the
+        isinstance(str) check misses it and isinstance(dict) rejects it -> []. This
+        converts it the same way parse_ai_parse_response handles the top level."""
+        if src is None or isinstance(src, (str, dict, list)):
+            return src
+        if isinstance(src, (bytes, bytearray)):
+            try:
+                return src.decode("utf-8", "ignore")
+            except Exception:
+                return str(src)
+        # VariantVal: toJson()/to_json(); else asDict(); else str()
+        for meth in ("toJson", "to_json"):
+            if hasattr(src, meth):
+                try:
+                    return getattr(src, meth)()
+                except Exception:
+                    pass
+        if hasattr(src, "asDict"):
+            try:
+                return src.asDict(recursive=True)
+            except Exception:
+                pass
+        return str(src)
+
+    def _extract(source):
+        source = _to_jsonable(source)          # Variant/Row/bytes -> str or dict
+        # parse JSON; if it's plain text, use the text parser
+        try:
+            data = _json.loads(source) if isinstance(source, str) else source
+        except Exception:
+            # INVALID / TRUNCATED JSON -> salvage the pairs we can
+            _sal = _salvage_truncated(source)
+            if _sal:
+                return _sal
+            data = None

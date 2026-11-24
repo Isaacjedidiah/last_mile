@@ -258,3 +258,16 @@ def ai_parse_figure_to_claims(el, filename, *, title=None, team=None,
         if got:
             return got
     return []
+
+#### 
+[theme]
+# a clean, professional light theme -- fixes white-on-white menus/toolbar
+base = "light"
+primaryColor = "#2E6DA4"            # buttons, accents (blue)
+backgroundColor = "#FFFFFF"         # main canvas
+secondaryBackgroundColor = "#F1F5FA" # sidebar, cards, inputs (soft blue-grey)
+textColor = "#1F2933"              # dark text (fixes invisible white text)
+font = "sans serif"
+
+[server]
+headless = true

@@ -1,0 +1,16 @@
+command: ["streamlit", "run", "app.py"]
+env:
+  - name: DATABRICKS_WAREHOUSE_ID
+    value: "REPLACE_WITH_YOUR_SQL_WAREHOUSE_ID"
+  - name: STREAMLIT_THEME_BASE
+    value: "dark"
+  - name: STREAMLIT_THEME_PRIMARY_COLOR
+    value: "#4F8DF7"
+  - name: STREAMLIT_THEME_BACKGROUND_COLOR
+    value: "#0C1322"
+  - name: STREAMLIT_THEME_SECONDARY_BACKGROUND_COLOR
+    value: "#13213C"
+  - name: STREAMLIT_THEME_TEXT_COLOR
+    value: "#ECF2FB"
+  - name: STREAMLIT_SERVER_HEADLESS
+    value: "true"
